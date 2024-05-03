@@ -6,7 +6,7 @@ export const create =async(req,res)=>{
     try{
         const section = await Section.create({board:boardId})
         section._doc.tasks=[];
-        return res.status(201).json(section);
+        return res.status(200).json(section);
     }catch(error){
         return res.status(500).json(error);
     }
@@ -20,9 +20,9 @@ export  const update = async(req,res)=>{
             {$set:req.body}
         )
         section._doc.tasks=[]
-        res.status(201).json(section);
+        return res.status(200).json(section);
     }catch(error){
-        res.status(500).json(err);
+        return res.status(500).json(err);
     }
 }
 

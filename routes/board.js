@@ -2,7 +2,7 @@ import express from "express";
 import { body,param } from "express-validator";
 import {validate,isObjectId} from "./../handlers/validation.js"
 import {verifyToken,tokenDecode} from "./../handlers/tokenHandler.js"
-import { create, getAll , updatePosition,getOne ,update, getFavourites, updateFavouritePosition, deleteTask} from "../controllers/board.js";
+import { create, getAll , updatePosition,getOne ,update, getFavourites, updateFavouritePosition, deleteBoard} from "../controllers/board.js";
 
 const router=express.Router();
 
@@ -29,7 +29,7 @@ router.put('/favourites',
 router.get(
     '/:boardId',
     param('boardId').custom(value=>{
-        if(!isObject(value)){
+        if(!isObjectId(value)){
             return Promise.reject('Invalid Id')
         }else return Promise.resolve()
     }),
@@ -40,7 +40,7 @@ router.get(
 router.put(
     '/:boardId',
     param('boardId').custom(value=>{
-        if(!isObject(value)){
+        if(!isObjectId(value)){
             return Promise.reject('Invalid Id')
         }else return Promise.resolve()
     }),
@@ -52,13 +52,13 @@ router.put(
 router.delete(
     '/:boardId',
     param('boardId').custom(value=>{
-        if(!isObject(value)){
+        if(!isObjectId(value)){
             return Promise.reject('Invalid id')
         }else return Promise.resolve()
     }),
     validate,
     verifyToken,
-    deleteTask
+    deleteBoard
 )
 
 

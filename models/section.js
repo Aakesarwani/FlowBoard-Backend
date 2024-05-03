@@ -3,14 +3,14 @@ const Schema=mongoose.Schema
 import {schemaOptions} from "./modelOptions.js";
 
 const sectionSchema = new Schema ({
-    user:{
+    board:{
         type:Schema.Types.ObjectId,
-        ref:'User',
+        ref:'Board',
         required:true
     },
     title:{
         type:String,
-        default:'Untitled'
+        default:''
     }
 },schemaOptions)
 

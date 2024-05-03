@@ -4,7 +4,7 @@ import { body,param } from "express-validator";
 import {deleteSection,update,create} from "../controllers/section.js";
 import {validate,isObjectId} from "./../handlers/validation.js"
 
-const router=express.Router();
+const router=express.Router({mergeParams:true});
 
 router.post(
     '/',

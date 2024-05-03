@@ -8,11 +8,12 @@ const router=express.Router();
 
 router.post(
     '/',
+    /*
     param('boardId').custom(value =>{
         if(!isObjectId(value)){
             return Promise.reject('invalid board Id')
         }else return Promise.resolve()
-    }),
+    }),*/
     body('sectionId').custom(value =>{
         if(!isObjectId(value)){
             return Promise.reject('invalid section Id')
@@ -23,23 +24,24 @@ router.post(
     create
 );
 router.put(
-    '/update-position',
+    '/update-position',/*
     param('boardId').custom(value =>{
         if(!isObjectId(value)){
             return Promise.reject('invalid board Id')
         }else return Promise.resolve()
-    }),
+    }),*/
     validate,
     verifyToken,
     updatePosition
 );
 router.delete(
     '/:taskId',
+    /*
     param('boardId').custom(value =>{
         if(!isObjectId(value)){
             return Promise.reject('invalid board Id')
         }else return Promise.resolve()
-    }),
+    }),*/
     param('taskId').custom(value =>{
         if(!isObjectId(value)){
             return Promise.reject('invalid task Id')
@@ -52,11 +54,12 @@ router.delete(
 
 router.put(
     '/:taskId',
+    /*
     param('boardId').custom(value =>{
         if(!isObjectId(value)){
             return Promise.reject('invalid board Id')
         }else return Promise.resolve()
-    }),
+    }),*/
     param('taskId').custom(value =>{
         if(!isObjectId(value)){
             return Promise.reject('invalid task Id')

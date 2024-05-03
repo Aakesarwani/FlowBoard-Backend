@@ -9,9 +9,9 @@ export const create =async(req,res)=>{
             user:req.user._id,
             position:boardsCount>0 ? boardsCount:0
         })
-        return res.json(201).json(board);
+        res.status(201).json(board);
     }catch(error){
-        return res.status(500).json(error)
+        res.status(500).json(error)
     }
 }
 
@@ -30,13 +30,13 @@ export const updatePosition=async(req,res)=>{
         for(const key in boards.reverse()){
             const board=boards[key]
             await Board.findByIdAndUpdate(
-                board._id,
+                board.id,//here _id
                 {$set:{position:key}}
             )
         }
-        res.status(200).json("updated")
+        return res.status(200).json("updated")
     }catch(error){
-        res.status(500).json(error);
+        return res.status(500).json(error);
     }
 }
 
@@ -44,16 +44,18 @@ export const getOne =async(req,res)=>{
     const {boardId}=req.params;
     try{
         const board=await Board.findOne({user:req.user._id,_id:boardId});
-        if(!board) return res.status(404).json("Board not found");
+        if(!board) {
+            return res.status(404).json("Board not found");
+        }
         const sections=await Section.find({board:boardId})
         for(const section of sections){
             const tasks=await Task.find({section:section.id}).populate('section').sort('-position')
             section._doc.tasks=tasks
         }
         board._doc.sections=sections
-        res.status(200).json(board)
+        return res.status(200).json(board)
     }catch(error){
-        res.status(500).json(error);
+        return res.status(500).json(error);
     }
 }
 
@@ -61,10 +63,10 @@ export const update =async(req,res)=>{
     const {boardId}=req.params;
     const {title,description,favourite}=req.body
     try{
-        if(title ===' ') req.body.title='Untitled';
-        if(description===' ') req.body.description='Add description here!';
+        if(title === '') req.body.title='Untitled';
+        if(description === '') req.body.description='Add description here!';
         const currentBoard=await Board.findById(boardId);
-        if(!currentBoard) returnres.status(404).json('Board not found');
+        if(!currentBoard) return res.status(404).json('Board not found');
 
         if(favourite !== undefined && currentBoard.favourite !== favourite){
             const favourites = await Board.find({
@@ -73,12 +75,12 @@ export const update =async(req,res)=>{
                 _id:{$ne:boardId}
             }).sort('favouritePosition')
             if(favourite){
-                req.body.favouritePosition=favourites.length()>0 ? favourites.length():0;
+                req.body.favouritePosition=favourites.length  > 0 ? favourites.length:0;
             }else{
                 for(const key in favourites){
                     const element =favourites[key]
                     await  Board.findByIdAndUpdate(
-                        element._id,
+                        element.id,
                         {$set:{favouritePosition:key } }
                     )
                 }
@@ -93,6 +95,8 @@ export const update =async(req,res)=>{
         return res.status(500).json(error);
     }
 }
+
+
 
 export const getFavourites=async(req,res)=>{
     try{
@@ -116,19 +120,19 @@ export const updateFavouritePosition= async(req,res)=>{
                 { $set:{favouritePosition:key}}
             )
         }
-        res.status(200).json('Updated');
+        return res.status(200).json('Updated');
 
     }catch(error){
         return res.status(500).json(err);
     }
 }
 
-export const deleteTask = async(req,res)=>{
+export const deleteBoard = async(req,res)=>{
     const {boardId}=req.params;
     try{
         const sections = await Section.find({board:boardId})
         for(const section of sections){
-            Task.deleteMany({section:section.id})
+            await Task.deleteMany({section:section.id})
         }
         await Section.deleteMany({board:boardId});
         const currentBoard= await Board.findById(boardId);
@@ -142,7 +146,7 @@ export const deleteTask = async(req,res)=>{
             for(const key in favourites){
                 const element =favourites[key]
                 await  Board.findByIdAndUpdate(
-                    element._id,
+                    element.id,
                     {$set:{favouritePosition:key } }
                 )
             }
@@ -152,7 +156,7 @@ export const deleteTask = async(req,res)=>{
         for(const key in boards){
             const board=boards[key]
             await Board.findByIdAndUpdate(
-                board._id,
+                board.id,
                 {$set:{position:key}}
             )
         }

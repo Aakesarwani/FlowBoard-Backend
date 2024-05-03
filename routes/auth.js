@@ -2,7 +2,7 @@ import express from "express";
 import {register,login} from "./../controllers/user.js";
 import { body } from "express-validator";
 import {validate,isObjectId} from "./../handlers/validation.js"
-import {verifyToken,tokenDecode} from "./../handlers/tokenHandler.js"
+import {verifyToken} from "./../handlers/tokenHandler.js"
 import User from "../models/user.js";
 
 const router=express.Router();
@@ -32,7 +32,7 @@ router.post(
 )
 
 router.post(
-    'verify-token',
+    '/verify-token',
     verifyToken,
     (req,res)=>{
         res.status(200).json({user:req.user})
